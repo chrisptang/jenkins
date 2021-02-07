@@ -8,8 +8,8 @@ COPY cli/ /jenkins/src/cli/
 COPY core/ /jenkins/src/core/
 COPY src/ /jenkins/src/src/
 COPY test/ /jenkins/src/test/
-COPY test-pom/ /jenkins/src/test-pom/
-COPY test-jdk8/ /jenkins/src/test-jdk8/
+# COPY test-pom/ /jenkins/src/test-pom/
+# COPY test-jdk8/ /jenkins/src/test-jdk8/
 COPY war/ /jenkins/src/war/
 COPY *.xml /jenkins/src/
 COPY LICENSE.txt /jenkins/src/LICENSE.txt
@@ -17,12 +17,17 @@ COPY licenseCompleter.groovy /jenkins/src/licenseCompleter.groovy
 COPY show-pom-version.rb /jenkins/src/show-pom-version.rb
 
 WORKDIR /jenkins/src/
-RUN mvn clean install --batch-mode -Plight-test
+RUN mvn clean install -Dmaven.test.skip --batch-mode -Plight-test
 
 # The image is based on the previous weekly, new changes in jenkinci/docker are not applied
-FROM jenkins/jenkins:latest
+FROM openjdk:8-jre-alpine
+LABEL maintainer="chris.p.tang@gmail.com"
 
-LABEL Description="This is an experimental image for the master branch of the Jenkins core" Vendor="Jenkins Project"
+ENV JVM_OPTS '-Dspecify.JVM_OPTS.to.provide.custom.jvm.options'
 
 COPY --from=builder /jenkins/src/war/target/jenkins.war /usr/share/jenkins/jenkins.war
-ENTRYPOINT ["tini", "--", "/usr/local/bin/jenkins.sh"]
+COPY start_jenkins.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+ENTRYPOINT ["/entrypoint.sh"]
+
+EXPOSE 8080
