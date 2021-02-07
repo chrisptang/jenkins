@@ -19,7 +19,7 @@ public class CatMonitorFilter implements Filter {
 
     private static final CatFilter CAT_FILTER = new CatFilter();
 
-    private static final String REG = ".*(\\.png|\\.gif|\\.css|\\.js|\\.svg|\\.html|\\.xml)$";
+    private static final String REG = ".*(\\.png|\\.gif|\\.css|\\.js|\\.svg|\\.html|\\.xml|\\.woff)$";
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -41,7 +41,9 @@ public class CatMonitorFilter implements Filter {
         if (request instanceof HttpServletRequest) {
             HttpServletRequest httpServletRequest = (HttpServletRequest) request;
             final String path = httpServletRequest.getRequestURI();
-            if (path.startsWith("/static/") || path.startsWith("/$stapler/")
+            if (path.startsWith("/static/")
+                    || path.startsWith("/sse-gateway/")
+                    || path.startsWith("/$stapler/")
                     || path.matches(REG)) {
                 LOGGER.info("path is no need to do CAT transaction:" + path);
                 chain.doFilter(request, response);
