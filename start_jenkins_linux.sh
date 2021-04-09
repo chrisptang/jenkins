@@ -35,7 +35,7 @@ make_sure_jdk_installed()
     then
         export JAVA_HOME=/opt/${JDK8_FULLNAME}
         export PATH=$JAVA_HOME/bin:$PATH
-        echo "${JDK8_FULLNAME} has been downlaoded before, just initial the envs."
+        echo "${JDK8_FULLNAME} has been downloaded before, just initial the envs."
         echo "JAVA_HOME:${JAVA_HOME}, PATH:${PATH}"
         is_jdk_install=0
         return $is_jdk_install
@@ -53,8 +53,12 @@ make_sure_jdk_installed()
 
     export JAVA_HOME=/opt/${JDK8_FULLNAME}
     echo "export JAVA_HOME=/opt/${JDK8_FULLNAME}" >> ~/.bash_profile
+    echo "export JAVA_HOME=/opt/${JDK8_FULLNAME}" >> ~/.bashrc
     export PATH=$JAVA_HOME/bin:$PATH
     echo "export PATH=$JAVA_HOME/bin:$PATH" >> ~/.bash_profile
+    echo "export PATH=$JAVA_HOME/bin:$PATH" >> ~/.bashrc
+
+    echo "please check java version:`java -version`"
 
     is_jdk_install=0
     return $is_jdk_install
